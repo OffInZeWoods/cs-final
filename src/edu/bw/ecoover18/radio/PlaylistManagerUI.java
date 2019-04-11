@@ -8,8 +8,8 @@ package edu.bw.ecoover18.radio;/*This class contains the UI that allows the DJ t
  *Version: 1.1.0
  */
 
+import javax.swing.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class PlaylistManagerUI implements Runnable{
 	public PlaylistManager manage = new PlaylistManager();
@@ -18,9 +18,9 @@ public class PlaylistManagerUI implements Runnable{
 
 	}
 
-	public ChangeAttribute changePlaylist() {
+	/* public ChangeAttribute changePlaylist() {
 		return null;
-	}
+	} */
 
 	public void viewPlaylist() {
 		ArrayList<String> playlist = manage.getPlaylist();
@@ -70,27 +70,27 @@ public class PlaylistManagerUI implements Runnable{
 			default: this.nowPlaying();
 		}
 	}
-}
 
-class ChangeAttribute {
-	public final int DELETE_SONG = -1;
-	public final int MOVE_SONG = 0;
-	public final int REPLAY_SONG = 1;
-	private int currentAtt = 0;
+	/* static class ChangeAttribute {
+		public final int DELETE_SONG = -1;
+		public final int MOVE_SONG = 0;
+		public final int REPLAY_SONG = 1;
+		private int currentAtt = 0;
 
-	public ChangeAttribute(int attr) {
-		currentAtt = attr;
-	}
+		public ChangeAttribute(int attr) {
+			currentAtt = attr;
+		}
 
-	public void setAttribute(int setTo) {
-		currentAtt = setTo;
-	}
+		public void setAttribute(int setTo) {
+			currentAtt = setTo;
+		}
 
-	public int getAttribute() {
-		return currentAtt;
-	}
+		public int getAttribute() {
+			return currentAtt;
+		}
 
-	public static ChangeAtrritbute makeAttribute() {
-		String[] options = new String[] {"Delete a Song.", "Move a Song.", "Replay Current Song."};
-	}
+		public static ChangeAttribute makeAttribute() {
+			String[] options = new String[] {"Delete a Song.", "Move a Song.", "Replay Current Song."};
+		}
+	} */
 }
