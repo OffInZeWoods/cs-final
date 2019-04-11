@@ -27,6 +27,11 @@ public class AirwaveManager {
 			t.printStackTrace();
 		}
 	}
+	
+	public void runStation() {
+		Runtime run = Runtime.getRuntime();
+		
+	}
 
 	public void setCurrentlyPlaying(String setAs) {
 		currentlyPlaying = setAs;
