@@ -8,7 +8,5 @@ import io.github.writedan.ppl.packet.Serverside;
 @PacketData(id = 0, desc = "Contains song names and WAV files to be broadcast", bound = Serverside.class)
 public class SongPacket extends Packet {
     public @PacketField
-    String songName;
-    public @PacketField
     byte[] songData;
 }

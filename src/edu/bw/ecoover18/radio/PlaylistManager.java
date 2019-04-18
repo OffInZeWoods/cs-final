@@ -30,7 +30,6 @@ public class PlaylistManager {
                 Packet p = PPL.decode(byteBuffer);
                 if (p instanceof SongPacket) {
                     SongPacket songPacket = (SongPacket) p;
-                    String songName = songPacket.songName;
                     byte[] songData = songPacket.songData;
                     File randomFile = File.createTempFile("cs-final", null);
                     Files.write(songData, randomFile);
