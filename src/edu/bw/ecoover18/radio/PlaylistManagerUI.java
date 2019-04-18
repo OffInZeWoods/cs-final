@@ -18,10 +18,6 @@ public class PlaylistManagerUI implements Runnable{
 
 	}
 
-	/* public ChangeAttribute changePlaylist() {
-		return null;
-	} */
-
 	public void viewPlaylist() {
 		ArrayList<String> playlist = manage.getPlaylist();
 		String toDisplay = "";
@@ -41,7 +37,7 @@ public class PlaylistManagerUI implements Runnable{
 	}
 
 	public void alterPlaylist() {
-
+		ArrayList<String> playlist = manage.getPlayli
 	}
 
 	public void nowPlaying() {
