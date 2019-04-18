@@ -1,13 +1,14 @@
 package edu.bw.ecoover18.radio;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 /*
  */
 
 public class AirwaveManager {
-	private double frequency = 102.1;
-	private String currentlyPlaying = "";
-	private ArrayList<String> queue = new ArrayList<String>();
+	private double frequency = 87.5;
+	private Queue<String> queue = new LinkedList<>();
 
 	public AirwaveManager() {
 
@@ -19,6 +20,7 @@ public class AirwaveManager {
 
 	public AirwaveManager(double freq, String startPlay) {
 		frequency = freq;
+		addToQueue(startPlay);
 		sendToAirwave(startPlay);
 	}
 
@@ -26,17 +28,16 @@ public class AirwaveManager {
 		frequency = freq;
 	}
 
-	public void addToQueue(String song) {
-		if(!queue.contains(song))
-			queue.add(song);
+	public void addToQueue(String toAdd) {
+		try {
+			queue.add(toAdd);
+		} catch (Throwable t) {
+
+		}
 	}
 
-	public void removeFromQueue(String toRemove) {
-		queue.remove(toRemove);
-	}
-
-	public void clearQueue() {
-		queue = new ArrayList<String>();
+	public void removeFirstInQueue() {
+		queue.remove();
 	}
 
 	public void sendToAirwave(String songName) {
@@ -44,17 +45,12 @@ public class AirwaveManager {
 			//sudo ./fm_transmitter [-f frequency] [-r] filename
 			String toSend = "sudo ./fm_transmitter -f " + frequency + " -r " + songName;
 			Runtime.getRuntime().exec(toSend);
-			setCurrentlyPlaying(songName);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 	}
 
-	public void setCurrentlyPlaying(String setAs) {
-		currentlyPlaying = setAs;
-	}
-
 	public String getCurrentlyPlaying() {
-		return currentlyPlaying;
+		return queue.peek();
 	}
 }
