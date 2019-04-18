@@ -1,81 +1,48 @@
 package edu.bw.ecoover18.radio;
 
+import com.google.common.io.Files;
+import edu.bw.ecoover18.radio.net.SongPacket;
+import io.github.writedan.ppl.PPL;
+import io.github.writedan.ppl.PPLServer;
+import io.github.writedan.ppl.SocketListener;
+import io.github.writedan.ppl.packet.Packet;
+
 import java.io.File;
-import java.io.FileReader;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
 
 public class PlaylistManager {
 	private ArrayList<String> playlist;
-	private final String playlistFileName = "edu/bw/ecoover18/radio/Playlist.txt";
 	private AirwaveManager awManager = new AirwaveManager();
+    private PPLServer pplServer = new PPLServer();
 
-	public PlaylistManager() {
-		playlist = new ArrayList<>();
-	}
+    public PlaylistManager(int port) throws Exception {
+        pplServer.bind(port);
+        pplServer.addListener(new SocketListener() {
+            @Override
+            public void connect(SocketChannel socketChannel) throws Exception {
+                System.out.println("Connected on " + socketChannel.getLocalAddress());
+            }
 
-	public void runPlayer() {
+            @Override
+            public void read(SocketChannel socketChannel, ByteBuffer byteBuffer) throws Exception {
+                Packet p = PPL.decode(byteBuffer);
+                if (p instanceof SongPacket) {
+                    SongPacket songPacket = (SongPacket) p;
+                    String songName = songPacket.songName;
+                    byte[] songData = songPacket.songData;
+                    File randomFile = File.createTempFile("cs-final", null);
+                    Files.write(songData, randomFile);
+                    awManager.sendToAirwave(randomFile.getAbsolutePath());
+                }
+            }
 
-	}
-
-	public void addToPlaylist(String songName, int placement) {
-		int playSize = playlist.size();
-		if(placement > playSize) {
-			placement = playSize-1;
-		}
-
-		playlist.add(placement, songName);
-	}
-
-	public void addAll(boolean shuffle) {
-		try {
-			FileReader readIn = new FileReader(new File("" + playlistFileName));
-			Scanner read = new Scanner(readIn);
-			ArrayList<String> temp = new ArrayList<>();
-			while(read.hasNextLine()) {
-				temp.add(read.nextLine());
-			}
-
-			if(shuffle) {
-				Collections.shuffle(temp);
-				Collections.shuffle(temp); //I always like to shuffle twice to ensure randomness
-			}
-
-			playlist = temp;
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-
-	public void removeFromPlaylist(String songName) {
-		playlist.remove(songName);
-	}
-
-	public void removeFromPlaylist(int place) {
-		playlist.remove(place);
-	}
-
-	public void removeAll() {
-		playlist = new ArrayList<>();
-	}
-
-	public void moveSong(String songToMove, int moveTo) {
-		this.removeFromPlaylist(songToMove);
-		this.addToPlaylist(songToMove, moveTo);
-	}
-
-	public void moveSong(int start, int end) {
-		this.moveSong(playlist.get(start), end);
-	}
-
-	public void replaySong() {
-		awManager.sendToAirwave(awManager.getCurrentlyPlaying());
-
-	}
-
-	public ArrayList<String> getPlaylist() {
-		return playlist;
+            @Override
+            public void exception(SocketChannel socketChannel, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
 	}
 }
 
